@@ -18,31 +18,39 @@ The CS amplifier utilizes a MOSFET with the source terminal grounded. The voltag
 <img width="1919" height="1065" alt="image" src="https://github.com/user-attachments/assets/f848e96c-8667-4125-afc8-006800125528" />
 ## Calculations
 
-### A. Theoretical Design (Max Power Constraint)
-Based on the design requirements specified in the manual:
-* **Maximum Power Allowed ($P_{max}$):** $1\text{ mW}$
-* **Supply Voltage ($V_{DD}$):** $1.8\text{ V}$
-* **Target Drain Current ($I_D$):** $I_{D,max} = \frac{1\text{ mW}}{1.8\text{ V}} = \mathbf{555.5 \mu A}$
+## 6. Calculations
 
-### B. DC Operating Point (Simulated)
-Based on the actual LTspice operating point simulation:
-* **Actual Drain Current ($I_D$):** $\mathbf{200.09 \mu A}$
-* **Actual Power Consumption:** $1.8\text{ V} \times 200.09\mu\text{A} = \mathbf{0.36\text{ mW}}$ (Well within the 1mW limit)
-* **Theoretical $g_m$:** $\frac{2 \times 200.09\mu\text{A}}{0.9\text{V} - 0.36\text{V}} = \mathbf{0.74\text{ mA/V}}$
-* **Theoretical Gain ($A_v$):** $0.74\text{m} \times 4.5\text{k}\Omega = \mathbf{3.33}$
+### A. Theoretical Hand Calculation (Design Target)
+Based on the lab requirements for a $1\text{mW}$ power limit:
+* **Max Drain Current ($I_D$):** $I_{D,max} = \frac{1\text{mW}}{1.8\text{V}} = \mathbf{555.5 \mu A}$.
+* **Width for Target current:** $W = 4.04 \mu\text{m}$ (Theoretical value for $1\text{mW}$ limit).
 
-### C. Transient Analysis (Simulated Gain)
-Using the cursor measurements from the transient response:
-* **Input Voltage ($V_{in,p-p}$):** $909.99\text{mV} - 890.02\text{mV} = \mathbf{19.97 \text{ mV}}$
-* **Output Voltage ($V_{out,p-p}$):** $922.79\text{mV} - 868.67\text{mV} = \mathbf{54.12 \text{ mV}}$
-* **Simulated Voltage Gain ($A_v$):** $\frac{54.12 \text{ mV}}{19.97 \text{ mV}} = \mathbf{2.71}$
-* **Simulated Gain in dB:** $20 \log_{10}(2.71) = \mathbf{8.66 \text{ dB}}$
+### B. DC Analysis (Simulated $200\mu\text{A}$ Operating Point)
+Based on the LTspice Operating Point results for your chosen width $W = 1.54 \mu\text{m}$:
+* **Drain Current ($I_D$):** $\mathbf{200.09 \mu A}$.
+* **Drain Voltage ($V_{out}$):** $0.8957\text{ V}$.
+* **Actual Power Consumption:** $P = 1.8\text{V} \times 200.09\mu\text{A} = \mathbf{0.36\text{ mW}}$ (Within $1\text{mW}$ limit).
 
-### D. AC Analysis and Bandwidth
-From the frequency response sweep:
-* **Mid-band Gain:** Found at **$10.45\text{ dB}$**.
+### C. Gain Calculation ($200\mu\text{A}$ Bias)
+Using the small-signal model parameters for the $200\mu\text{A}$ bias:
+* **Transconductance ($g_m$):**
+  $$g_m = \frac{2 \cdot I_D}{V_{GS} - V_{th}} = \frac{2 \cdot 200.09\mu\text{A}}{0.9\text{V} - 0.36\text{V}} = \mathbf{0.74\text{ mA/V}}$$.
+* **Theoretical Gain ($A_v$):**
+  $$A_v = -g_m \cdot R_D = 0.74\text{m} \cdot 4.5\text{k}\Omega = \mathbf{3.33}$$.
+* **Theoretical Gain in dB:**
+  $$A_{v,dB} = 20 \log_{10}(3.33) = \mathbf{10.45\text{ dB}}$$.
+
+### D. Simulated Gain (Transient Measurements)
+Extracted from the input/output waveforms:
+* **Input Peak-to-Peak ($V_{in,pp}$):** $909.99\text{mV} - 890.02\text{mV} = \mathbf{19.97\text{ mV}}$.
+* **Output Peak-to-Peak ($V_{out,pp}$):** $922.79\text{mV} - 868.67\text{mV} = \mathbf{54.12\text{ mV}}$.
+* **Measured Gain ($A_v$):** $\frac{54.12\text{mV}}{19.97\text{mV}} = \mathbf{2.71}$
+* **Measured Gain in dB:** $20 \log_{10}(2.71) = \mathbf{8.66\text{ dB}}$
+
+### E. AC Analysis and Bandwidth
+From the frequency response plot:
+* **Mid-band AC Gain:** **$10.45\text{ dB}$**.
 * **High Cutoff Frequency ($f_H$):** Measured at **$8.89\text{ MHz}$**.
-* **Bandwidth Limitation:** Primarily set by the output pole $f_p = \frac{1}{2\pi R_D C_L}$ where $C_L = 10\text{pF}$.
 
 
 
