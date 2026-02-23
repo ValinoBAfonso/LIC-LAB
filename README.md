@@ -136,6 +136,39 @@ The high-frequency response is dominated by the output pole ($P_1$).
 
 
 ---
+## c. Results and Analysis (Simulated)
+<img width="632" height="509" alt="image" src="https://github.com/user-attachments/assets/429540fb-080d-4cb9-aa8b-f940627d6113" />
+
+### A. DC Operating Point Analysis
+Based on the LTspice Operating Point simulation:
+* **Drain Current ($I_D$):** **$200.09 \mu\text{A}$**.
+* **Output Node Voltage ($V_{out}$):** **$0.8957\text{ V}$**.
+* **Supply Voltage ($V_{DD}$):** $1.8\text{ V}$.
+* **Input Gate Bias ($V_{GS}$):** $0.9\text{ V}$.
+
+### B. Transient Analysis (Time Domain)
+The transient response was measured to determine the practical voltage gain:
+* **Input Peak-to-Peak ($V_{in,p-p}$):** Measured as **$19.976 \text{ mV}$** ($909.99\text{mV} - 890.02\text{mV}$).
+* **Output Peak-to-Peak ($V_{out,p-p}$):** Measured as **$54.120 \text{ mV}$** ($922.79\text{mV} - 868.67\text{mV}$).
+* **Voltage Gain ($A_v$):** $\frac{54.120 \text{ mV}}{19.976 \text{ mV}} \approx \mathbf{2.71}$.
+* **Phase Relationship:** The output waveform is $180^\circ$ out of phase with the input, confirming the inverting nature of the Common Source stage.
+
+
+### C. AC Analysis (Frequency Domain)
+The frequency response was swept from $0.1\text{Hz}$ to $100\text{GHz}$:
+* **Mid-band Gain:** **$10.45\text{ dB}$**.
+* **3dB Cutoff Frequency ($f_H$):** Measured at **$8.89\text{ MHz}$**.
+* **Bandwidth Limitation:** The sharp roll-off at high frequencies is due to the interaction of the **$4.5\text{ k}\Omega$** drain resistor and the **$10\text{ pF}$** load capacitor.
+
+---
+
+## 8. Summary of Performance
+| Parameter | Measured Value |
+| :--- | :--- |
+| **Drain Current ($I_D$)** | $200.09 \mu\text{A}$ |
+| **Power Consumption** | $0.36\text{ mW}$ |
+| **AC Mid-band Gain** | $10.45\text{ dB}$ |
+| **Bandwidth ($f_H$)** | $8.89\text{ MHz}$ |
 
 ## 8. Conclusion and Precautions
 * **Conclusion:** The design successfully meets the power constraint of $< 1\text{ mW}$. While the current was lower than the theoretical maximum, the gain of $10.45\text{ dB}$ provides a stable and predictable output for the given $180\text{nm}$ process.
