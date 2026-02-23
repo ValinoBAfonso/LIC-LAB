@@ -134,13 +134,6 @@ The high-frequency response is dominated by the output pole ($P_1$).
 * **Output Pole ($f_{P1}$):** $f_{P1} = \frac{1}{2\pi R_D C_L}$
 * **Effect of Load:** With $C_L = 10\text{ pF}$, the bandwidth is significantly lower than an unloaded stage, which explains the $8.89\text{ MHz}$ cutoff.
 
-### A. Summary Comparison Table
-| Feature | Hand Calculation (Target) | LTspice Simulation (Actual) |
-| :--- | :--- | :--- |
-| **Drain Current ($I_D$)** | $555.5 \text{ \mu A}$ | $200.09 \text{ \mu A}$ |
-| **Power Consumption** | $1.0\text{ mW}$ | $0.36\text{ mW}$ |
-| **Voltage Gain ($A_{v,dB}$)** | $11.78\text{ dB}$ (Approx) | $10.45\text{ dB}$ |
-| **Cutoff Frequency ($f_H$)** | $3.53\text{ MHz}$ (Ideal RC) | $8.89\text{ MHz}$ |
 
 ---
 
