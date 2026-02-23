@@ -12,6 +12,10 @@ The CS amplifier utilizes a MOSFET with the source terminal grounded. The voltag
 * **Voltage Gain**: $A_v = -g_m (R_D \parallel r_o) \approx -g_m R_D$
 * **Transconductance**: $g_m = \frac{2 I_D}{V_{ov}}$, where $V_{ov} = V_{GS} - V_{th}$
 * **Phase**: The amplifier introduces a $180^\circ$ phase shift between input and output.
+* <img width="1913" height="1109" alt="image" src="https://github.com/user-attachments/assets/e73155db-5e74-46e0-9612-020b60ea5281" />
+<img width="1919" height="1081" alt="image" src="https://github.com/user-attachments/assets/8769c921-08c9-4dfe-8f82-8f0776ee9efb" />
+
+
 
 ---
 
@@ -28,6 +32,7 @@ Based on the TSMC 180nm process specifications and design requirements:
 | **Length ($L$)** | 180 nm |
 | **Width ($W$)** | 1.54 $\mu$m |
 
+
 ---
 
 ## 4. DC Sweep and Analysis
@@ -35,6 +40,8 @@ The DC sweep was performed to determine the transition region and the proper bia
 * **Biasing Point**: $V_{GS}$ was set to 0.9 V to ensure the MOSFET operates in the saturation region.
 * **Output DC Level**: The drain voltage ($V_{out}$) was measured at approximately 0.895 V.
 * **Drain Current**: The simulated $I_D$ is $200.95 \mu\text{A}$.
+* <img width="1919" height="1116" alt="image" src="https://github.com/user-attachments/assets/a5694314-26c9-421a-afe6-2edbea626613" />
+
 
 ---
 
@@ -43,6 +50,8 @@ The AC analysis shows the gain magnitude and phase across a wide frequency spect
 * **Mid-band Gain**: Measured at approximately **10.45 dB**.
 * **-3dB Frequency ($f_H$)**: The high-frequency cutoff is **8.89 MHz**, primarily due to the 10pF load capacitance.
 * **Phase**: Confirmed at $180^\circ$ in the mid-band region.
+* <img width="1919" height="1173" alt="image" src="https://github.com/user-attachments/assets/bdd3c6e7-b965-46eb-a092-79ba4dda9ee0" />
+
 
 ---
 
