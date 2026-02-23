@@ -69,24 +69,7 @@ Using the values from the LTspice operating point:
 * **Theoretical Gain (dB)**: $20 \log_{10}(3.33) \approx \mathbf{10.45\text{ dB}}$.
 
 
-### A. Theoretical Hand Calculation (Design Targets)
-Based on the design requirements specified in the manual:
-* **Maximum Power Allowed ($P_{max}$):** $1\text{ mW}$
-* **Supply Voltage ($V_{DD}$):** $1.8\text{ V}$
-* **Target Drain Current ($I_D$):** $\frac{1\text{ mW}}{1.8\text{ V}} = \mathbf{555.5 \text{ \mu A}}$
-* **Target Width ($W$) for $I_D = 555.5 \text{ \mu A}$:** To reach this current with $L = 180\text{ nm}$ and $R_D = 1620\text{ \Omega}$, the required width is approximately $\mathbf{3.93 \text{ \mu m}}$.
-
-### B. Simulation-Based Calculation (Actual Result)
-Based on the simulation parameters used in LTspice:
-* **Operating Drain Current ($I_D$):** $\mathbf{200.09 \text{ \mu A}}$
-* **Actual Power Consumption ($P$):** $1.8\text{ V} \times 200.09\text{ \mu A} = \mathbf{0.36\text{ mW}}$ (Within $1\text{ mW}$ limit)
-* **MOSFET Transconductance ($g_m$):**
-  $$g_m = \frac{2 \cdot I_D}{V_{GS} - V_{th}} = \frac{2 \cdot 200.09\text{ \mu A}}{0.9\text{ V} - 0.36\text{ V}} \approx \mathbf{0.74\text{ mA/V}}$$
-* **Theoretical Voltage Gain ($A_v$):**
-  $$A_v = -g_m \cdot R_D = 0.74\text{ m} \cdot 4.5\text{ k}\Omega = \mathbf{3.33}$$
-* **Theoretical Gain in dB:**
-  $$A_{v,dB} = 20 \cdot \log_{10}(3.33) \approx \mathbf{10.45\text{ dB}}$$
-  <img width="1919" height="1091" alt="image" src="https://github.com/user-attachments/assets/38f4dd6e-cda7-4276-889a-e5aaee710954" />
+<img width="1919" height="1091" alt="image" src="https://github.com/user-attachments/assets/0f52205c-f7b6-456b-9770-0aae6d174855" />
 
   
 
