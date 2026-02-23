@@ -48,7 +48,7 @@ The DC sweep was performed to determine the transition region and the proper bia
 ## 5. AC Analysis and Frequency Response
 The AC analysis shows the gain magnitude and phase across a wide frequency spectrum.
 * **Mid-band Gain**: Measured at approximately **10.45 dB**.
-* **-3dB Frequency ($f_H$)**: The high-frequency cutoff is **8.89 MHz**, primarily due to the 10pF load capacitance.
+
 * **Phase**: Confirmed at $180^\circ$ in the mid-band region.
 * <img width="1919" height="1173" alt="image" src="https://github.com/user-attachments/assets/bdd3c6e7-b965-46eb-a092-79ba4dda9ee0" />
 
