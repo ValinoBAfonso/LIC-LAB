@@ -162,13 +162,15 @@ The frequency response was swept from $0.1\text{Hz}$ to $100\text{GHz}$:
 
 ---
 
-## 8. Summary of Performance
+## D. Summary of Performance
 | Parameter | Measured Value |
 | :--- | :--- |
 | **Drain Current ($I_D$)** | $200.09 \mu\text{A}$ |
 | **Power Consumption** | $0.36\text{ mW}$ |
 | **AC Mid-band Gain** | $10.45\text{ dB}$ |
 | **Bandwidth ($f_H$)** | $8.89\text{ MHz}$ |
+
+
 
 ## 8. Conclusion and Precautions
 * **Conclusion:** The design successfully meets the power constraint of $< 1\text{ mW}$. While the current was lower than the theoretical maximum, the gain of $10.45\text{ dB}$ provides a stable and predictable output for the given $180\text{nm}$ process.
