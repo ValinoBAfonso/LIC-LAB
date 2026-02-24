@@ -185,7 +185,10 @@ Based on the $1\text{mW}$ power limit constraint:
 * **Max Current:** $I_{D,max} = \frac{1\text{mW}}{1.8\text{V}} = \mathbf{555.5 \mu A}$.
 
 ### B. Simulated Performance ($I_D \approx 200 \mu\text{A}$)
-Using the results from the LTspice simulation:
+<img width="639" height="504" alt="Screenshot 2026-02-24 090702" src="https://github.com/user-attachments/assets/6cbf107c-9a95-40ed-a4f1-fbffce3031f6" />
+
+Using the results from 
+the LTspice simulation:
 * **Drain Current ($I_D$):** **$200.09 \mu\text{A}$**.
 * **Power Consumption:** $P = 1.8\text{V} \times 200.09 \mu\text{A} = \mathbf{0.36\text{ mW}}$.
 * **Transconductance ($g_m$):** $$g_m = \frac{2 \times I_D}{V_{GS} - V_{th}} = \frac{2 \times 200.09 \mu\text{A}}{0.9\text{V} - 0.36\text{V}} \approx \mathbf{0.74\text{ mA/V}}$$
