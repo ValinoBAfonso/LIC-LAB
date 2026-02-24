@@ -86,100 +86,158 @@ The DC sweep was performed to determine the transition region and the proper bia
 ## 5. AC Analysis and Frequency Response
 The AC analysis shows the gain magnitude and phase across a wide frequency spectrum.
 * **Mid-band Gain**: Measured at approximately **10.45 dB**.
-
+* **3dB Frequency ($f_H$)**: Measured at **4.04 MHz**.
 * **Phase**: Confirmed at $180^\circ$ in the mid-band region.
-* <img width="1919" height="1173" alt="image" src="https://github.com/user-attachments/assets/bdd3c6e7-b965-46eb-a092-79ba4dda9ee0" />
+<img width="1915" height="1087" alt="Screenshot 2026-02-24 092742" src="https://github.com/user-attachments/assets/249d7753-ee1e-4192-ae6a-ae23351bbb88" />
+
 
 
 ---
 
 ## 6. Calculations
+<img width="648" height="514" alt="Screenshot 2026-02-23 180928" src="https://github.com/user-attachments/assets/c14e45f7-7d21-4a0e-a58f-fe85d7ce3898" />
 
-### A. Theoretical Design (Target $P \leq 1$mW)
-* **Target Current**: $I_{D,max} = \frac{1\text{mW}}{1.8\text{V}} = 555.5 \mu\text{A}$.
-* **Width for Target**: To reach this current, a larger width ($W \approx 4.04 \mu\text{m}$) would be required.
+### A. Theoretical Design (Target $I_D = 200 \mu\text{A}$)
+* **Target Current**: $I_{D} = 200 \mu\text{A}$.
+* **Power Calculation**: $P = V_{DD} \times I_D = 1.8\text{V} \times 200 \mu\text{A} = \mathbf{0.36\text{ mW}}$.
+* **Width for Target**: To reach this current at $L = 180\text{nm}$ with $V_{GS} = 0.9\text{V}$, the width was optimized to **$1.54 \mu\text{m}$**.
 
-### B. Simulated Performance ($I_D \approx 200 \mu\text{A}$)
-Using the values from the LTspice operating point:
-* **Power Consumption**: $P = 1.8\text{V} \times 200.95 \mu\text{A} = \mathbf{0.36\text{ mW}}$.
-* **Transconductance ($g_m$)**: $g_m = \frac{2 \times 200 \mu\text{A}}{0.9\text{V} - 0.36\text{V}} \approx \mathbf{0.74\text{ mA/V}}$.
-* **Theoretical Gain ($A_v$)**: $A_v = 0.74\text{m} \times 4.5\text{k} = \mathbf{3.33}$.
-* **Theoretical Gain (dB)**: $20 \log_{10}(3.33) \approx \mathbf{10.45\text{ dB}}$.
-
-
-<img width="1919" height="1091" alt="image" src="https://github.com/user-attachments/assets/0f52205c-f7b6-456b-9770-0aae6d174855" />
-
-  
+### B. Simulated Performance Analysis
+Using the values extracted from the LTspice operating point:
+* **Transconductance ($g_m$)**: 
+  $$g_m = \frac{2 \times I_D}{V_{GS} - V_{th}} = \frac{2 \times 200 \mu\text{A}}{0.9\text{V} - 0.36\text{V}} \approx \mathbf{0.74\text{ mA/V}}$$
+* **Theoretical Gain ($A_v$)**: 
+  $$A_v = -g_m \times R_D = 0.74\text{mA/V} \times 4.5\text{k}\Omega = \mathbf{3.33}$$
+* **Theoretical Gain (dB)**: 
+  $$20 \log_{10}(3.33) \approx \mathbf{10.45\text{ dB}}$$
 
 ### C. Bandwidth Calculation
-* **High Cutoff Frequency ($f_H$):** Measured as **$12.13\text{ MHz}$**.
-* **Determinant factor:** The bandwidth is limited by the output pole formed by $R_D$ and $C_L$:
+* **High Cutoff Frequency ($f_H$):** Measured as **$4.04\text{ MHz}$**.
+* **Determinant factor**: The bandwidth is dominated by the output pole formed by the load:
   $$f_H \approx \frac{1}{2\pi \cdot R_D \cdot C_L} = \frac{1}{2\pi \cdot 4.5\text{ k}\Omega \cdot 10\text{ pF}} \approx \mathbf{3.53\text{ MHz}}$$
-* *Note: The simulated $f_H$ is higher than the simple $RC$ calculation due to internal MOSFET capacitances and higher-order effects in the 180nm model.*
+* *Note: The simulated $f_H$ ($4.04\text{ MHz}$) is very close to the theoretical calculation ($3.53\text{ MHz}$), with the slight increase due to the internal characteristics of the 180nm model.*
 
-* ---
+---
 
 ## 7. Extended Analysis
 
 ### A. MOSFET Operating Region Verification
-To ensure the amplifier operates linearly, we must verify the saturation condition: $V_{DS} \geq V_{GS} - V_{th}$.
+To ensure the amplifier operates linearly, the saturation condition $V_{DS} \geq V_{GS} - V_{th}$ must be met.
 * **Gate-Source Voltage ($V_{GS}$):** $0.9\text{ V}$
-* **Threshold Voltage ($V_{th}$):** $\approx 0.36\text{ V}$ (Extracted from model)
+* **Threshold Voltage ($V_{th}$):** $\approx 0.36\text{ V}$
 * **Drain-Source Voltage ($V_{DS}$):** $0.895\text{ V}$
-* **Condition:** $0.895\text{ V} \geq (0.9\text{ V} - 0.36\text{ V}) \Rightarrow 0.895\text{ V} \geq 0.54\text{ V}$.
-* **Inference:** The transistor is safely in the **Saturation Region**, confirming valid amplification.
+* **Condition:** $0.895\text{ V} \geq 0.54\text{ V}$ (Condition Met).
+* **Inference:** The transistor is biased in the **Saturation Region**, confirming valid small-signal amplification.
 
 ### B. Pole and Bandwidth Analysis
-The high-frequency response is dominated by the output pole ($P_1$).
-* **Output Pole ($f_{P1}$):** $f_{P1} = \frac{1}{2\pi R_D C_L}$
-* **Effect of Load:** With $C_L = 10\text{ pF}$, the bandwidth is significantly lower than an unloaded stage, which explains the $8.89\text{ MHz}$ cutoff.
-
+The frequency response is limited by the **10 pF** load capacitance.
+* **Output Pole ($f_{P1}$):** Formed at the drain node by the parallel combination of $R_D$ and $C_L$.
+* **Bandwidth Observation**: The gain remains flat until the pole at **4.04 MHz**, where the capacitive reactance of $C_L$ begins to shunt the output signal to ground.
 
 ---
-## c. Results and Analysis (Simulated)
-<img width="632" height="509" alt="image" src="https://github.com/user-attachments/assets/429540fb-080d-4cb9-aa8b-f940627d6113" />
 
-### A. DC Operating Point Analysis
-Based on the LTspice Operating Point simulation:
+## 8. Results and Analysis (Simulated Summary)
+
+### A. DC Operating Point
 * **Drain Current ($I_D$):** **$200.09 \mu\text{A}$**.
-* **Output Node Voltage ($V_{out}$):** **$0.8957\text{ V}$**.
-* **Supply Voltage ($V_{DD}$):** $1.8\text{ V}$.
-* **Input Gate Bias ($V_{GS}$):** $0.9\text{ V}$.
+* **Output Voltage ($V_{out}$):** **$0.8957\text{ V}$**.
 
-### B. Transient Analysis (Time Domain)
-The transient response was measured to determine the practical voltage gain:
-* **Input Peak-to-Peak ($V_{in,p-p}$):** Measured as **$19.976 \text{ mV}$** ($909.99\text{mV} - 890.02\text{mV}$).
-* **Output Peak-to-Peak ($V_{out,p-p}$):** Measured as **$54.120 \text{ mV}$** ($922.79\text{mV} - 868.67\text{mV}$).
-* **Voltage Gain ($A_v$):** $\frac{54.120 \text{ mV}}{19.976 \text{ mV}} \approx \mathbf{2.71}$.
-* **Phase Relationship:** The output waveform is $180^\circ$ out of phase with the input, confirming the inverting nature of the Common Source stage.
+### B. Transient Analysis
+* **Input Peak-to-Peak ($V_{in,p-p}$):** **$19.976 \text{ mV}$**.
+* **Output Peak-to-Peak ($V_{out,p-p}$):** **$54.120 \text{ mV}$**.
+* **Voltage Gain ($A_v$):** **$2.71$**.
+* **Phase Relationship**: $180^\circ$ inversion confirmed.
 
-
-### C. AC Analysis (Frequency Domain)
-The frequency response was swept from $0.1\text{Hz}$ to $100\text{GHz}$:
-* **Mid-band Gain:** **$10.45\text{ dB}$**.
-* **3dB Cutoff Frequency ($f_H$):** Measured at **$8.89\text{ MHz}$**.
-* **Bandwidth Limitation:** The sharp roll-off at high frequencies is due to the interaction of the **$4.5\text{ k}\Omega$** drain resistor and the **$10\text{ pF}$** load capacitor.
+### C. AC Analysis Summary
+* **Mid-band Gain**: **$10.45\text{ dB}$**.
+* **3dB Cutoff Frequency ($f_H$):** **$4.04\text{ MHz}$**.
 
 ---
 
+# Lab Report: Common Source Amplifier Analysis ($L = 560\text{ nm}$)
+
+---
+<img width="365" height="307" alt="Screenshot 2026-02-24 083018" src="https://github.com/user-attachments/assets/ed654cfc-8487-49e4-b97c-720f444207b5" />
+
+## 1. Parameters
+The design is based on the following specifications for the $560\text{ nm}$ configuration:
+* **Transistor Length ($L$):** $560\text{ nm}$
+* **Transistor Width ($W$):** $4.52 \mu\text{m}$
+* **Drain Resistance ($R_D$):** $4.5\text{ k}\Omega$
+* **Load Capacitance ($C_L$):** $10\text{ pF}$
+* **Supply Voltage ($V_{DD}$):** $1.8\text{ V}$
+
+---
+
+## 2. Procedure
+1. **Schematic Entry:** Constructed the CS amplifier using a MOSFET with $L=560\text{nm}$ and $W=4.52\mu\text{m}$.
+2. **DC Analysis:** Performed an Operating Point (.op) simulation to verify the drain current ($I_D$) and power consumption.
+3. **DC Sweep:** Conducted a sweep of $V_{in}$ to verify the transistor remains in the saturation region ($V_{DS} > V_{GS} - V_{th}$).
+4. **Transient Analysis:** Measured the input and output peak-to-peak voltages to calculate gain and verify the $180^\circ$ phase shift.
+5. **AC Analysis:** Performed a frequency response sweep to identify the mid-band gain and the $12.13\text{ MHz}$ 3dB cutoff frequency.
+
+---
+
+## 3. Calculations and Analysis
+
+### A. Theoretical Design (Target $I_D = 555.5 \mu\text{A}$)
+Based on the $1\text{mW}$ power limit constraint:
+* **Max Current:** $I_{D,max} = \frac{1\text{mW}}{1.8\text{V}} = \mathbf{555.5 \mu A}$.
+
+### B. Simulated Performance ($I_D \approx 200 \mu\text{A}$)
+Using the results from the LTspice simulation:
+* **Drain Current ($I_D$):** **$200.09 \mu\text{A}$**.
+* **Power Consumption:** $P = 1.8\text{V} \times 200.09 \mu\text{A} = \mathbf{0.36\text{ mW}}$.
+* **Transconductance ($g_m$):** $$g_m = \frac{2 \times I_D}{V_{GS} - V_{th}} = \frac{2 \times 200.09 \mu\text{A}}{0.9\text{V} - 0.36\text{V}} \approx \mathbf{0.74\text{ mA/V}}$$
+
+### C. Transient Gain Analysis
+Using the measured peak-to-peak values from the transient simulation:
+* **Output Voltage ($V_{out,p-p}$):** $66.401 \text{ mV}$
+* **Input Voltage ($V_{in,p-p}$):** $19.997 \text{ mV}$
+* **Voltage Gain ($A_v$):** $\frac{66.401 \text{ mV}}{19.997 \text{ mV}} = \mathbf{3.32}$
+* **Gain in dB:** $20 \log_{10}(3.32) = \mathbf{10.42 \text{ dB}}$
+<img width="1913" height="1091" alt="Screenshot 2026-02-24 082942" src="https://github.com/user-attachments/assets/67e52342-8a39-48b3-b05f-a74fa0b04d0c" />
+
+---<img width="1919" height="1083" alt="Screenshot 2026-02-24 082957" src="https://github.com/user-attachments/assets/5da09f93-506a-4d51-840f-a06f6335939f" />
+
+
+## 4. AC Analysis and Frequency Response
+The frequency response was analyzed to determine the bandwidth.
+
+* **3dB Cutoff Frequency ($f_H$):** Measured at **3,63 MHz**.
+* **Phase:** A $180^\circ$ phase shift was confirmed in the mid-band region, verifying the inverting nature of the amplifier.
+<img width="1919" height="1098" alt="Screenshot 2026-02-24 090112" src="https://github.com/user-attachments/assets/2edadced-8764-4d36-882c-877990f22ac6" />
+A. DC Sweep
+
+
+<img width="1903" height="558" alt="Screenshot 2026-02-24 094331" src="https://github.com/user-attachments/assets/f7b378fb-f938-4d07-bd81-81fa2389b73a" />
+
+
+
+
+---
+
+## 5. Results Summary ($L = 560\text{ nm}$)
+
+| Parameter | Measured/Simulated Value |
+| :--- | :--- |
+| **Drain Current ($I_D$)** | $200.09 \mu\text{A}$ |
+| **Power Consumption** | $0.36\text{ mW}$ |
+| **Transient Voltage Gain ($A_v$)** | $3.32$ |
+| **3dB Bandwidth ($f_H$)** | $12.13\text{ MHz}$ |
+| **Phase Shift** | $180^\circ$ |
+
+---
+
+## 6. Inference
+The design using **$L = 560\text{ nm}$** and **$W = 4.52\mu\text{m}$** results in a highly efficient amplifier consuming only **$0.36\text{ mW}$**. The transient gain of **$3.32$** closely matches the theoretical expectations. The measured bandwidth of **$12.13\text{ MHz}$** indicates the high-speed capability of the circuit when driving a $10\text{pF}$ load. The $180^\circ$ phase shift confirms the circuit is operating as a standard inverting Common Source stage.
 ## D. Summary of Performance
 | Parameter | Measured Value |
 | :--- | :--- |
 | **Drain Current ($I_D$)** | $200.09 \mu\text{A}$ |
 | **Power Consumption** | $0.36\text{ mW}$ |
 | **AC Mid-band Gain** | $10.45\text{ dB}$ |
-| **Bandwidth ($f_H$)** | $8.89\text{ MHz}$ |
-
-
-
-## 8. Conclusion and Precautions
-* **Conclusion:** The design successfully meets the power constraint of $< 1\text{ mW}$. While the current was lower than the theoretical maximum, the gain of $10.45\text{ dB}$ provides a stable and predictable output for the given $180\text{nm}$ process.
-* **Precautions:**
-    1. Ensure the `.lib` path for `tsmc018.lib` is correct to avoid simulation errors.
-    2. Maintain $V_{DS} > V_{GS} - V_{th}$ to prevent the signal from clipping or entering the triode region.
-    3. Use small-signal input amplitudes (e.g., $10\text{ mV}$) to avoid non-linear distortion.
----
-
+| **3dB Bandwidth ($f_H$)** | $4.04\text{ MHz}$ |
 ## 9. Inference
 * **Phase Shift**: The output waveform is exactly $180^\circ$ out of phase with the input, verifying inverting amplification.
 * **Design Validation**: The simulated gain of **10.45 dB** perfectly matches the theoretical calculation based on the $200 \mu\text{A}$ drain current.
