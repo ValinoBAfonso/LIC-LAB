@@ -1,6 +1,6 @@
-###. Design Parameters (180 nm Process)
+. Design Parameters (180 nm Process)
 - **Technology Node:** 180 nm
-- ###. A. DC Output
+- . A. DC Output
 - <img width="632" height="510" alt="image" src="https://github.com/user-attachments/assets/1b03d23c-6d4f-4eed-8e13-f7dd1f39c4c3" />
 
 ### B. Transient Measurements Vin Vout
