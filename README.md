@@ -18,7 +18,7 @@ The CS amplifier utilizes a MOSFET with the source terminal grounded. The voltag
 <img width="1919" height="1065" alt="image" src="https://github.com/user-attachments/assets/f848e96c-8667-4125-afc8-006800125528" />
 ## Calculations
 
-## 6. Calculations
+## 3. Calculations
 
 ### A. Theoretical Hand Calculation (Design Target)
 Based on the lab requirements for a $1\text{mW}$ power limit:
@@ -115,7 +115,7 @@ Using the values extracted from the LTspice operating point:
 * **High Cutoff Frequency ($f_H$):** Measured as **$4.04\text{ MHz}$**.
 * **Determinant factor**: The bandwidth is dominated by the output pole formed by the load:
   $$f_H \approx \frac{1}{2\pi \cdot R_D \cdot C_L} = \frac{1}{2\pi \cdot 4.5\text{ k}\Omega \cdot 10\text{ pF}} \approx \mathbf{3.53\text{ MHz}}$$
-* *Note: The simulated $f_H$ ($4.04\text{ MHz}$) is very close to the theoretical calculation ($3.53\text{ MHz}$), with the slight increase due to the internal characteristics of the 180nm model.*
+
 
 ---
 
@@ -194,6 +194,14 @@ the LTspice simulation:
 * **Transconductance ($g_m$):** $$g_m = \frac{2 \times I_D}{V_{GS} - V_{th}} = \frac{2 \times 200.09 \mu\text{A}}{0.9\text{V} - 0.36\text{V}} \approx \mathbf{0.74\text{ mA/V}}$$
 
 ### C. Transient Gain Analysis
+Using the small-signal model parameters for the $200\mu\text{A}$ bias:
+* **Transconductance ($g_m$):**
+  $$g_m = \frac{2 \cdot I_D}{V_{GS} - V_{th}} = \frac{2 \cdot 200.09\mu\text{A}}{0.9\text{V} - 0.36\text{V}} = \mathbf{0.74\text{ mA/V}}$$.
+* **Theoretical Gain ($A_v$):**
+  $$A_v = -g_m \cdot R_D = 0.74\text{m} \cdot 4.5\text{k}\Omega = \mathbf{3.33}$$.
+* **Theoretical Gain in dB:**
+  $$A_{v,dB} = 20 \log_{10}(3.33) = \mathbf{10.45\text{ dB}}$$.
+  
 Using the measured peak-to-peak values from the transient simulation:
 * **Output Voltage ($V_{out,p-p}$):** $66.401 \text{ mV}$
 * **Input Voltage ($V_{in,p-p}$):** $19.997 \text{ mV}$
@@ -207,7 +215,7 @@ Using the measured peak-to-peak values from the transient simulation:
 ## 4. AC Analysis and Frequency Response
 The frequency response was analyzed to determine the bandwidth.
 
-* **3dB Cutoff Frequency ($f_H$):** Measured at **3,63 MHz**.
+* **3dB Cutoff Frequency ($f_H$):** Measured at **3.63 MHz**.
 * **Phase:** A $180^\circ$ phase shift was confirmed in the mid-band region, verifying the inverting nature of the amplifier.
 <img width="1919" height="1098" alt="Screenshot 2026-02-24 090112" src="https://github.com/user-attachments/assets/2edadced-8764-4d36-882c-877990f22ac6" />
 A. DC Sweep
@@ -227,21 +235,18 @@ A. DC Sweep
 | **Drain Current ($I_D$)** | $200.09 \mu\text{A}$ |
 | **Power Consumption** | $0.36\text{ mW}$ |
 | **Transient Voltage Gain ($A_v$)** | $3.32$ |
-| **3dB Bandwidth ($f_H$)** | $12.13\text{ MHz}$ |
+| **3dB Bandwidth ($f_H$)** | $3.63\text{ MHz}$ |
 | **Phase Shift** | $180^\circ$ |
 
 ---
 
 ## 6. Inference
+
 The design using **$L = 560\text{ nm}$** and **$W = 4.52\mu\text{m}$** results in a highly efficient amplifier consuming only **$0.36\text{ mW}$**. The transient gain of **$3.32$** closely matches the theoretical expectations. The measured bandwidth of **$12.13\text{ MHz}$** indicates the high-speed capability of the circuit when driving a $10\text{pF}$ load. The $180^\circ$ phase shift confirms the circuit is operating as a standard inverting Common Source stage.
-## D. Summary of Performance
-| Parameter | Measured Value |
-| :--- | :--- |
-| **Drain Current ($I_D$)** | $200.09 \mu\text{A}$ |
-| **Power Consumption** | $0.36\text{ mW}$ |
-| **AC Mid-band Gain** | $10.45\text{ dB}$ |
-| **3dB Bandwidth ($f_H$)** | $4.04\text{ MHz}$ |
-## 9. Inference
+
+### Design Parameters (180 nm Process)
+
+- **Technology Node:** 180 nm
 * **Phase Shift**: The output waveform is exactly $180^\circ$ out of phase with the input, verifying inverting amplification.
 * **Design Validation**: The simulated gain of **10.45 dB** perfectly matches the theoretical calculation based on the $200 \mu\text{A}$ drain current.
 * **Bandwidth**: The cutoff frequency ($f_H$) of **8.89 MHz** indicates the speed limitation of the circuit when driving a 10 pF load.
