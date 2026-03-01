@@ -47,19 +47,45 @@ Based on the design requirements, the following parameters and constraints were 
     <img width="640" height="479" alt="Screenshot 2026-03-01 155556" src="https://github.com/user-attachments/assets/b0d5538c-72f6-4e12-ab6f-609f152798f4" />
 
 
-###  Theoretical Gain Calculation
-Using the simplified small-signal model where $g_{m1} = \frac{2I_D}{V_{OV}} = 1.11 \times 10^{-3} S$ and $r_{out} = 25k\Omega$:
-$$A_v = \frac{-g_{m1} \times r_{out}}{1 + g_{m1}R_s} = \frac{-27.75}{1 + (1.11 \times 10^{-3} \times 1000)} \approx 13.15$$
-**In decibels:** $20 \log_{10}(13.15) = \mathbf{22.37 \, dB}$
+---
+
+## Theoretical Gain Calculation (Circuit 1)
+
+Using the corrected Overdrive Voltage ($V_{OV} = 0.25V$) and Drain Current ($I_D = 200\mu A$), we re-calculate the transconductance and gain for the source-degenerated CS amplifier.
+
+### A. Corrected Transconductance ($g_{m1}$)
+$$g_{m1} = \frac{2I_D}{V_{OV}} = \frac{2 \times 200\mu A}{0.25V} = \mathbf{1.6 \, mS}$$
+
+
+
+### B. Gain Formulas and Results
 
 #### Case 1: Considering Channel Length Modulation ($\lambda \neq 0$)
-The exact formula used for design is:
+The exact formula accounts for the finite output resistance ($r_{o1}$) of the driver and the PMOS load ($r_{o2}$):
 $$A_v = \frac{-g_{m1}}{[1 + g_{m1}R_s + R_s/r_{o1}]} \times \{ [g_{m1}R_s r_{o1} + R_s + r_{o1}] \, || \, r_{o2} \}$$
 
 #### Case 2: Simplified Formula ($\lambda_1 = 0, \lambda_2 \neq 0$)
-When internal resistance $r_{o1}$ is very high, the formula simplifies to:
+If we assume $r_{o1}$ is very high (idealized driver), the formula simplifies to:
 $$A_v = \frac{-g_{m1} \times r_{o2}}{1 + g_{m1}R_s}$$
 
+#### Case 3: Calculation with $R_s = 1000\Omega$ and $r_{out} = 25k\Omega$
+Using $g_{m1} = 1.6\text{ mS}$:
+1. **Numerator (Unloaded Gain):** $g_{m1} \times r_{out} = 1.6mS \times 25k\Omega = 40$
+2. **Denominator (Degeneration Factor):** $1 + (g_{m1} \times R_s) = 1 + (1.6mS \times 1000\Omega) = 2.6$
+3. **Voltage Gain Ratio:** $$A_v = \frac{40}{2.6} \approx \mathbf{15.38}$$
+4. **Gain in Decibels (dB):** $$20 \log_{10}(15.38) = \mathbf{23.74 \, dB}$$
+
+---
+
+### C. Comparison with Previous $g_m$
+| Parameter | Old Value ($V_{OV}=0.36V$) | Corrected Value ($V_{OV}=0.25V$) |
+| :--- | :--- | :--- |
+| **Transconductance ($g_m$)** | 1.11 mS | **1.6 mS** |
+| **Voltage Gain (Ratio)** | 13.15 | **15.38** |
+| **Voltage Gain (dB)** | 22.37 dB | **23.74 dB** |
+
+**Inference:**
+Reducing the Overdrive Voltage to **0.25V** increases the $g_m$ by approximately **44%**. This leads to a gain increase of **1.37 dB** for the first circuit, bringing the theoretical prediction closer to the high-performance levels seen in the active-load configurations.
 
 ### C. Simulated Gain Calculation (From LTspice)
 ### Transient Analysis
@@ -70,6 +96,7 @@ The simulated gain is derived from the AC analysis output magnitudes:
 * **Simulated Voltage Ratio:** $A_{v(sim)} = \frac{246.399}{19.99} \approx 12.326$
 * **Simulated Gain (dB):** $20 \log_{10}(12.326) = \mathbf{21.82 \, dB}$
 * **3dB Frequency:** The bandwidth cutoff frequency is **275.829 MHz**.
+* 
 * <img width="1909" height="523" alt="Screenshot 2026-03-01 154604" src="https://github.com/user-attachments/assets/d66b95b9-f130-4611-8b42-4b7b5fd84c36" />
 <img width="1915" height="518" alt="Screenshot 2026-03-01 154618" src="https://github.com/user-attachments/assets/a972f305-f742-4b90-991f-fc110242a2e0" />
 <img width="1909" height="520" alt="Screenshot 2026-03-01 154635" src="https://github.com/user-attachments/assets/59f1317d-cef5-4cc2-a212-b140446fb7c9" />
@@ -96,28 +123,36 @@ The DC sweep (VTC) confirms that the output bias point is correctly set at appro
 
 ---
 
+---
+
 ## 4. Inference and Conclusion
 
-### Comparison Table
-| Parameter | Theoretical | Simulated | Difference |
+### Updated Comparison Table (Circuit 1)
+| Parameter | Theoretical ($V_{OV}=0.25V$) | Simulated | Difference |
 | :--- | :--- | :--- | :--- |
-| **Voltage Gain (dB)** | 22.37 dB | 21.82 dB | **0.55 dB** |
+| **Voltage Gain (dB)** | **23.74 dB** | **21.82 dB** | **1.92 dB** |
+| **Voltage Gain (Ratio)**| **15.38** | **12.33** | **3.05** |
 | **Drain Current ($I_D$)** | 200 µA | 199.8 µA | 0.2 µA |
+
+
 
 ## 5. Difference Between Simulated and Calculated Gain
 
-There is a discrepancy of **0.55 dB** between the theoretical ($22.37\text{ dB}$) and simulated ($21.82\text{ dB}$) results. This is attributed to the following:
+The discrepancy of **1.92 dB** between the theoretical calculation (**23.74 dB**) and the LTspice simulation (**21.82 dB**) is attributed to the following real-world factors modeled in the 180nm process:
 
-* **Body Effect ($g_{mb}$):** Theoretical formulas often ignore the body effect because the source is usually grounded. However, with $R_s$ present, the source is at $0.2V$, increasing $V_{SB}$ and shifting the threshold voltage, which slightly reduces the effective $g_m$ and gain.
-* **Channel Length Modulation ($\lambda$):** Hand calculations assumed a fixed $\lambda = 0.1 V^{-1}$. The `tsmc018.lib` model uses a more complex, non-linear model for $r_o$ that varies with $V_{DS}$, leading to a slightly lower output impedance in simulation.
+* **Body Effect ($g_{mb}$):** In hand calculations, the body effect is typically ignored. However, in this circuit, the source of $M_1$ is not grounded ($V_{RS} \approx 0.2V$). This creates a non-zero source-to-bulk voltage ($V_{SB}$), which increases the threshold voltage ($V_{th}$) and introduces body transconductance ($g_{mb}$). This effectively reduces the overall gain as the denominator in the gain formula increases:
+  $$A_v \approx \frac{-g_{m1} \cdot r_{out}}{1 + (g_{m1} + g_{mb})R_s}$$
+
+* **Non-Linear Channel Length Modulation ($\lambda$):** While hand calculations assume a fixed $\lambda = 0.1 V^{-1}$ (resulting in $r_{out} = 25k\Omega$), the `tsmc018.lib` model uses a complex, non-linear calculation for $r_o$. In the simulation environment, the actual output impedance is slightly lower than the idealized $1/(\lambda I_D)$, which pulls the simulated gain down.
+
 * **Red Pen Reference (Effect of $R_s$):**
-    * **Without $R_s$:** The gain would be significantly higher ($A_v = -g_m \times r_{out} \approx 27.75$ or $28.8\text{ dB}$).
-    * **With $R_s$:** The denominator $(1 + g_m R_s)$ acts as a feedback factor that reduces the gain but makes it much more stable against transistor parameter variations.
+    * **Without $R_s$:** The gain would be significantly higher ($A_v = -g_m \times r_{out} \approx 40$ or **32 dB**).
+    * **With $R_s$:** The denominator $(1 + g_m R_s)$ acts as a negative feedback factor. While it reduces the absolute gain to **21.82 dB**, it provides the benefit of making the amplifier's gain much more stable against variations in transistor parameters and temperature.
 
 ---
 
 ### Key Observations
-* **Gain Discrepancy:** The minor **0.55 dB** difference is attributed to the body effect and precise channel length modulation parameters in the `tsmc018.lib` model not captured in hand calculations.
+* **Gain Discrepancy:** The minor **1.92 dB** difference is attributed to the body effect and precise channel length modulation parameters in the `tsmc018.lib` model not captured in hand calculations.
 * **Degeneration Benefits:** $R_s$ stabilizes the gain against process variations and improves the input linear range.
 * **Saturation:** Both transistors remained in the saturation region during the signal swing, as verified by $V_{DS1} \geq 0.25V$.
 
