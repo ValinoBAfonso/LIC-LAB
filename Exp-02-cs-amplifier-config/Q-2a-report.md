@@ -44,6 +44,9 @@ Based on the design requirements, the following parameters and constraints were 
 2.  **PMOS Gate Voltage ($V_{G2}$):**
     $$V_{G2} = V_{DD} - V_{SG2} = 1.8V - 0.64V = 1.16V$$
 
+    <img width="640" height="479" alt="Screenshot 2026-03-01 155556" src="https://github.com/user-attachments/assets/b0d5538c-72f6-4e12-ab6f-609f152798f4" />
+
+
 ###  Theoretical Gain Calculation
 Using the simplified small-signal model where $g_{m1} = \frac{2I_D}{V_{OV}} = 1.11 \times 10^{-3} S$ and $r_{out} = 25k\Omega$:
 $$A_v = \frac{-g_{m1} \times r_{out}}{1 + g_{m1}R_s} = \frac{-27.75}{1 + (1.11 \times 10^{-3} \times 1000)} \approx 13.15$$
