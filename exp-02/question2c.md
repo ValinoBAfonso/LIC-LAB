@@ -24,6 +24,29 @@ The DC analysis ensures that all transistors operate in the **Saturation Region*
     Using the threshold voltage ($V_{thn} = 0.36V$):
     $$V_{GS1} = V_{OV} + V_{thn} = 0.25V + 0.36V = \mathbf{0.61V}$$
 
+  ## Theoretical Width Calculation and Performance Inference
+
+### 1. Width Calculation for Circuit 2c ($M_2$ and $M_1$)
+The width of a MOSFET is determined by the saturation current equation. In this design, the current $I_D$ is fixed at **200 µA** and the overdrive voltage $V_{OV}$ is **0.25 V**.
+
+#### A. NMOS Driver ($M_1$) and Degeneration ($M_3$)
+Assuming standard 180nm process parameters where $\mu_n C_{ox} \approx 280 \, \mu A/V^2$:
+
+$$I_D = \frac{1}{2} \mu_n C_{ox} \frac{W_1}{L} (V_{GS} - V_{th})^2$$
+
+$$200\mu A = \frac{1}{2} (280\mu A/V^2) \frac{W_1}{180nm} (0.25V)^2$$
+
+$$W_1 = \frac{200\mu A \cdot 180nm}{140\mu A/V^2 \cdot 0.0625V^2} \approx \mathbf{4.11 \, \mu m}$$
+
+#### B. PMOS Load ($M_2$)
+For the PMOS load, the mobility $\mu_p$ is typically $1/3$ of $\mu_n$ ($\mu_p C_{ox} \approx 70 \, \mu A/V^2$). To maintain the same current at the same $V_{OV}$, the width theoretically follows:
+
+$$200\mu A = \frac{1}{2} (70\mu A/V^2) \frac{W_2}{180nm} (0.25V)^2$$
+
+$$W_2 = \frac{200\mu A \cdot 180nm}{35\mu A/V^2 \cdot 0.0625V^2} \approx \mathbf{16.45 \, \mu m}$$
+
+> **Note on Simulation Adjustment:** In the actual simulation, $W_2$ was increased to **41.5 µm**. This extra width is strategically used to increase the output resistance $r_{o2}$, thereby compensating for the heavy gain reduction caused by the $0.61V$ active source degeneration.
+
 **Source Voltage ($V_{RS}$):**
     For this configuration, we set the source voltage (at the drain of $M_3$) to:
     $$V_{RS} = \mathbf{0.61V}$$
@@ -114,6 +137,13 @@ The theoretical gain (32.04 dB) is higher than the simulated gain (18.58 dB) due
 
 ## 3. Inference
 The initial theoretical estimate of $32.04 \text{ dB}$ was significantly higher than the simulated $18.58 \text{ dB}$ because it failed to account for the **Body Effect** at $V_{RS} = 0.61V$ and the finite output resistance of the PMOS active load, which limits the total achievable impedance at the output node.
+
+
+The variance between the **32.04 dB (Theory)** and **18.58 dB (Simulation)** results from the limitations of First-Order Square Law models:
+
+1. **Parallel Impedance:** Hand calculations often treat the PMOS as an ideal current source. Simulation correctly identifies that $r_{o1}$ and $r_{o2}$ act in parallel, effectively bisecting the output impedance.
+2. **Body Effect:** At $V_{RS} = 0.61V$, the $V_{SB}$ mismatch increases $V_{th}$, which suppresses the transconductance ($g_m$) of the driver.
+3. **Short Channel Effects:** In the 180nm process, $\lambda$ is non-linear. The simulation accounts for the reduction in $r_o$ as the transistors enter specific regions of saturation that hand calculations simplify.
 ---
 
 ## 4. AC Analysis (Frequency Response)
