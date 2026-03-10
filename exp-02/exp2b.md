@@ -9,13 +9,14 @@ This design targets a specific operating point while maintaining a power budget 
 <img width="1412" height="938" alt="Screenshot 2026-03-01 160353" src="https://github.com/user-attachments/assets/dcfd7b84-2fdd-423c-89d4-191c5ff6e8a4" />
 
 
+
 ### Given Specifications
 * **Technology Node:** 180nm
 * **Supply Voltage ($V_{DD}$):** 1.8V
 * **Target Drain Current ($I_D$):** ~200µA
 * **Target $V_{DS3}$ (Degeneration Voltage):** 0.3V (adjusted from 0.34V in simulation)
 
-* ### 5. Width Calculation for Circuit 2b ($M_2$ and $M_1$)
+* ### Width Calculation for Circuit 2b ($M_2$ and $M_1$)
 The physical dimensions of the transistors are derived from the saturation current equation to maintain a design current of $I_D = 200 \mu A$ with an overdrive voltage $V_{OV} = 0.25 V$.
 
 #### A. NMOS Driver and Degeneration ($W_1, W_3$)
