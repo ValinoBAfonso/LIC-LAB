@@ -1,7 +1,8 @@
 # Circuit 3 Analysis: PMOS Differential Amplifier with NMOS Current Mirror Load
 
 Circuit 3 utilizes a PMOS input pair ($M_3, M_4$) and an NMOS active load ($M_1, M_2$). This "flipped" architecture provides unique advantages in noise performance and input voltage range while maintaining high gain.
-<img width="614" height="357" alt="image" src="https://github.com/user-attachments/assets/8631d71b-ed6c-4e5f-a16d-44db1a937964" />
+<img width="791" height="432" alt="image" src="https://github.com/user-attachments/assets/33113d18-32b3-4d2f-b752-e00939246810" />
+
 
 
 ---
