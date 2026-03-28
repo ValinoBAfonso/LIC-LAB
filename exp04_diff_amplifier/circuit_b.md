@@ -150,7 +150,51 @@ To calculate the required Width ($W$) for your transistors, we use the **Saturat
 
 ---
 
-## 1. Fundamental Design Equations
+# Analysis of Operation: Linear Region vs. Current Steering
+
+The operational behavior of the CMOS differential pair is defined by the relationship between the differential input voltage ($V_{id}$) and the calculated overdrive voltage ($V_{ov} = 0.34\text{V}$). 
+
+---
+
+## 1. The Linear Bound ($|V_{id}| \le 480\text{mV}$)
+In this region, the differential input voltage is small enough that the transconductance ($g_m$) remains relatively constant, ensuring a proportional relationship between input and output.
+
+* **Transistor State:** Both $M_1$ and $M_2$ remain in the **Saturation Region**.
+* **Current Action:** The tail current ($I_{SS} = 0.54\text{mA}$) is distributed such that the changes in $I_{d1}$ and $I_{d2}$ vary linearly with $V_{id}$.
+* **Result:** The output follows the input sine wave perfectly. This was verified by your **$10\text{mV}$** test ($V_{id, p-p} = 40\text{mV}$), which sits well within the $480\text{mV}$ limit.
+
+---
+
+## 2. The Limit Point ($|V_{id}| = \sqrt{2}V_{ov} \approx 0.48\text{V}$)
+This is the theoretical "breaking point" of the linear amplifier, representing the maximum signal the pair can process without significant distortion.
+
+* **Current Steering:** At exactly $+480\text{mV}$, the current in one branch ($I_{d1}$) reaches the full **$0.54\text{mA}$**, while the other branch ($I_{d2}$) drops to **$0\text{A}$**.
+* **Boundary:** This represents the maximum differential voltage the pair can handle before the output voltage stops increasing (clipping).
+
+---
+
+## 3. The Non-Linear Region ($|V_{id}| > 480\text{mV}$)
+Once the input exceeds the $480\text{mV}$ threshold, the circuit functions as a **limiter** rather than an amplifier.
+
+* **Transistor State:** One transistor is fully **ON** (carrying the full tail current) while the other is **OFF** (Cut-off).
+* **Result:** As seen in your **$400\text{mV}$** test ($V_{id, p-p} = 1.6\text{V}$), the output waveform clips heavily. Since $1.6\text{V} \gg 0.48\text{V}$, the circuit cannot maintain a sine wave and "flattens" at the peaks.
+
+---
+
+## Summary of Analysis for Project Report
+
+| Mathematical Condition | Input Voltage Value | Physical Behavior | Simulation Match |
+| :--- | :--- | :--- | :--- |
+| $V_{id} \ll \sqrt{2}V_{ov}$ | **$10\text{mV}$** | Linear Amplification | Clean Sine Wave ($27\text{mV p-p}$) |
+| $V_{id} \approx \sqrt{2}V_{ov}$ | **$480\text{mV}$** | Maximum Linear Swing | Edge of Distortion |
+| $V_{id} > \sqrt{2}V_{ov}$ | **$600\text{mV} / 800\text{mV}$** | Current Steering / Clipping | Flattened / Square Wave Output |
+
+---
+
+### Final Design Note
+To increase the linear range in future designs, you would need to increase the overdrive voltage ($V_{ov}$). This can be achieved by either increasing the tail current ($I_{SS}$) or decreasing the $W/L$ ratio of the input pair, though both choices involve a direct trade-off with the total voltage gain ($A_v$).
+
+## 2. Fundamental Design Equations
 
 The drain current in saturation is defined as:
 $$I_D = \frac{1}{2} \mu C_{ox} \frac{W}{L} (V_{GS} - V_{th})^2$$
@@ -166,7 +210,7 @@ For these calculations, we use typical approximate values for the $180\text{nm}$
 
 ---
 
-## 2. Step-by-Step Width Calculations
+## Step-by-Step Width Calculations
 
 ### A. Tail Transistor ($M_5$)
 This NMOS transistor must carry the full tail current to set the power level.
