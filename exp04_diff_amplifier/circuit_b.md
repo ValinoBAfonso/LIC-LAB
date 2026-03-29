@@ -1,6 +1,7 @@
 # Design and Analysis of a CMOS Differential Amplifier 
 ### (PMOS Active Load and NMOS Current Mirror)
-<img width="1039" height="606" alt="image" src="https://github.com/user-attachments/assets/e1b1d3b8-aa4c-40a7-90f8-3f3b91ef35b4" />
+<img width="894" height="576" alt="image" src="https://github.com/user-attachments/assets/2f0afeb6-3803-4147-b358-7604dd285184" />
+
 
 
 Designing a CMOS differential amplifier with a PMOS active load and an NMOS current mirror is a classic challenge in analog IC design. This configuration significantly increases the voltage gain compared to a passive resistive load by providing a high incremental output resistance.
