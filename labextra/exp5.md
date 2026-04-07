@@ -155,3 +155,308 @@ The AC analysis defines the **"Speed Limit"** of the circuit:
 
 > [!IMPORTANT]
 > **Final Verdict:** This voltage follower is an excellent buffer for signals from **DC up to ~1MHz**. For high-speed data or radio frequency (RF) applications, a "High-Slew-Rate" op-amp would be required to replace the $\mu A741$.
+
+
+# Inverting Amplifier Configuration
+<img width="998" height="669" alt="image" src="https://github.com/user-attachments/assets/e51579e4-5370-4ac2-827b-bd33473b3d75" />
+
+
+This section explores the **Inverting Amplifier** setup using the $\mu A741$ op-amp. Unlike the voltage follower, this configuration provides voltage amplification and shifts the output phase by $180^\circ$.
+
+## 1. Circuit Logic
+In this setup, the non-inverting input ($+$) is tied to **Ground**. 
+
+* **Negative Feedback:** Through $R_f$, the op-amp maintains both inputs at the same potential. This creates a **Virtual Ground ($0\text{V}$)** at the inverting input ($-$).
+* **Current Path:** Since the inverting input is at $0\text{V}$, all current originating from $V_{in}$ through $R_{in}$ must pass through $R_f$ toward the output, as the op-amp's internal input impedance is near-infinite.
+
+---
+
+## 2. Gain Calculation (The Math)
+The voltage gain ($A_v$) of an inverting amplifier is defined by the ratio of the feedback resistor to the input resistor:
+
+$$A_v = -\frac{R_f}{R_{in}}$$
+
+### Applied Values:
+* **$R_f$ (Feedback):** $7\text{k}\Omega$
+* **$R_{in}$ (Input):** $1\text{k}\Omega$
+* **Calculation:** $A_v = -\frac{7000}{1000} = \mathbf{-7\text{ V/V}}$
+
+The negative sign indicates **phase inversion**: an input of $+1\text{V}$ results in an output of $-7\text{V}$.
+
+---
+
+## 3. Simulation & Parameters
+
+### Expected Output vs. Reality
+* **Input ($V_1$):** $5\text{V}$ peak sine wave.
+* **Theoretical Output:** $5\text{V} \times (-7) = \mathbf{-35\text{V}}$.
+
+### The "Saturation" Trap
+The power supplies ($V_2$ and $V_3$) are set to **$\pm 15\text{V}$**. An operational amplifier cannot provide an output voltage that exceeds its supply rails.
+
+> [!CAUTION]
+> **Clipping Observed:** Because the theoretical output ($35\text{V}$) exceeds the rails ($15\text{V}$), the output waveform will **clip** (flatten) at approximately $\pm 14\text{V}$. The resulting wave will appear "shaved" at the peaks and troughs.
+
+---
+
+## Conclusion
+This circuit is designed for a **gain of 7** with phase inversion. 
+
+**Lab Recommendation:** To observe a clean, undistorted sine wave using these resistor values, the input amplitude ($V_1$) should be lowered to **$1\text{V}$**. This ensures the output ($7\text{V}$) remains safely within the $\pm 15\text{V}$ operating range (headroom).
+
+# DC Operating Point (.op) Analysis: Inverting Amplifier
+<img width="481" height="290" alt="image" src="https://github.com/user-attachments/assets/4d8f036a-25a4-49d6-83e2-f5e7aae44c20" />
+
+This report details the static state of the Inverting Amplifier at $t=0$. With the input sine wave ($V_{in}$) at $0\text{V}$, these results illustrate the op-amp's "at rest" behavior and verify the biasing.
+
+## 1. Key Node Voltages
+The voltages at the supply and input nodes confirm the circuit is properly powered and biased.
+
+| Node | Voltage | Description |
+| :--- | :--- | :--- |
+| **V(n002)** | $+15\text{V}$ | Positive Supply Rail ($+V_{cc}$) |
+| **V(n003)** | $-15\text{V}$ | Negative Supply Rail ($-V_{ee}$) |
+| **V(n001)** | $19.25\mu\text{V}$ | Inverting Input (Summing Junction) |
+| **V(vout)** | $0.71\text{mV}$ | DC Output Offset |
+
+> [!NOTE]
+> **Offset Analysis:** While $V(n001)$ should theoretically be $0\text{V}$ (Virtual Ground), the $19.2\mu\text{V}$ reading is a result of the $\mu A741$ model's non-ideal characteristics. This tiny offset is multiplied by the circuit gain, resulting in the $0.7\text{mV}$ output.
+
+---
+
+## 2. The "Virtual Ground" Proof
+The simulation results provide empirical evidence for the **Virtual Ground** concept. Since both $V_{in}$ and the inverting terminal ($V_{n001}$) are at approximately $0\text{V}$, the current through $R_{in}$ is negligible.
+
+* **Measured Current ($I_{Rin}$):** $19.2\text{nA}$
+* **Validation:** This confirms the op-amp is successfully "forcing" the inverting terminal to ground level via the negative feedback loop through $R_f$.
+
+---
+
+## 3. Supply & Quiescent Currents
+* **Quiescent Current ($I_{V2}, I_{V3}$):** $\approx 1.66\text{mA}$  
+  This is the baseline power consumption required to keep the internal circuitry of the $\mu A741$ active, independent of the input signal.
+
+---
+
+## 4. Summary Table
+
+| Parameter | Value | Interpretation |
+| :--- | :--- | :--- |
+| **Input Node** | $\approx 19\mu\text{V}$ | Confirms **Virtual Ground** is active. |
+| **Output Offset** | $\approx 0.7\text{mV}$ | Typical error for a $\mu A741$ op-amp. |
+| **Power Draw** | $\approx 1.6\text{mA}$ | Standard "Quiescent" current for this model. |
+
+## Conclusion
+The DC analysis confirms the circuit is biased correctly and stable. With the "Virtual Ground" verified, the circuit is prepared for **Transient Analysis**, where the $5\text{V}$ sine wave will be introduced.
+
+
+# Mathematical Derivation: Inverting Amplifier Gain
+
+To derive the gain for this configuration, we apply the two **"Golden Rules"** of ideal operational amplifiers:
+1. **High Input Impedance:** No current flows into the op-amp input terminals ($I_+ = I_- = 0$).
+2. **Virtual Short:** The op-amp maintains the input voltages at equal levels ($V_+ = V_-$) via negative feedback.
+
+---
+
+## Step 1: Establish the Virtual Ground
+In this circuit, the non-inverting terminal ($+$) is connected directly to ground:
+$$V_+ = 0\text{V}$$
+
+According to the second Golden Rule, the inverting terminal ($-$) must also be at the same potential:
+$$V_- = V_+ = 0\text{V}$$
+
+This point is known as **Virtual Ground**. While not physically wired to ground, the op-amp's feedback loop maintains it at $0\text{V}$.
+
+---
+
+## Step 2: Kirchhoff’s Current Law (KCL)
+Because the op-amp's internal input impedance is theoretically infinite, no current enters the device itself. Therefore, all current flowing through the input resistor ($R_{in}$) must continue through the feedback resistor ($R_f$):
+$$I_{in} = I_f$$
+
+---
+
+## Step 3: Application of Ohm’s Law
+We define the currents based on the node voltages:
+
+* **Input Current ($I_{in}$):** The voltage across $R_{in}$ is $(V_{in} - V_-)$.
+    $$I_{in} = \frac{V_{in} - V_-}{R_{in}} = \frac{V_{in} - 0}{R_{in}} = \frac{V_{in}}{R_{in}}$$
+
+* **Feedback Current ($I_f$):** The voltage across $R_f$ is $(V_- - V_{out})$.
+    $$I_f = \frac{V_- - V_{out}}{R_f} = \frac{0 - V_{out}}{R_f} = -\frac{V_{out}}{R_f}$$
+
+---
+
+## Step 4: Solving for Voltage Gain ($A_v$)
+Equating the two currents as established in Step 2:
+$$\frac{V_{in}}{R_{in}} = -\frac{V_{out}}{R_f}$$
+
+To find the gain ($A_v$), rearrange the equation to solve for the ratio of output to input ($\frac{V_{out}}{V_{in}}$):
+$$V_{out} = -V_{in} \cdot \left( \frac{R_f}{R_{in}} \right)$$
+
+$$\mathbf{A_v = \frac{V_{out}}{V_{in}} = -\frac{R_f}{R_{in}}}$$
+
+---
+
+## Conclusion
+For this specific implementation where $R_f = 7\text{k}\Omega$ and $R_{in} = 1\text{k}\Omega$:
+$$A_v = -\frac{7\text{k}}{1\text{k}} = -7$$
+
+The **negative sign** is the mathematical proof of the phase inversion—the output polarity will always be the opposite of the input.
+
+# Transient Analysis: Inversion and Output Saturation
+<img width="1917" height="526" alt="image" src="https://github.com/user-attachments/assets/4aa35522-adc6-4ab7-9478-c2f11a3ec8c9" />
+
+
+The transient analysis results for the Inverting Amplifier ($A_v = -7$) illustrate two critical op-amp phenomena: **Phase Inversion** and **Output Clipping**.
+
+
+
+## 1. Phase Inversion (The "Upside Down" Wave)
+The relationship between the input signal ($V_{in}$, dark blue) and the output signal ($V_{out}$, light blue) confirms the mathematical derivation $A_v = -R_f/R_{in}$:
+* **$180^\circ$ Shift:** When the input signal swings positive (up), the output swings negative (down).
+* **Polarity:** The output is always the mathematical opposite of the input, verifying the negative gain.
+
+---
+
+## 2. Output Clipping (Saturation)
+The most prominent feature of this simulation is the "flat-topping" of the output waveform.
+
+* **Theoretical Expectation:** $V_{out} = 5\text{V} \times (-7) = \mathbf{-35\text{V}}$.
+* **Physical Reality:** The power supplies ($V_{cc}/V_{ee}$) are limited to **$\pm 15\text{V}$**.
+* **The Result:** The op-amp "hits the ceiling" at approximately $+14\text{V}$ and the "floor" at $-14\text{V}$. Since it cannot exceed its supply rails, the peaks and troughs of the sine wave are chopped off, resulting in a distorted, quasi-square wave.
+
+---
+
+## 3. Slew Rate Limitations
+If you examine the vertical transitions of the output signal, they are not perfectly instantaneous; they exhibit a slight slant.
+* **Definition:** This represents the **Slew Rate** of the $\mu A741$—the maximum speed (measured in $\text{V}/\mu\text{s}$) at which the output can change.
+* **Observation:** Because the amplifier is being forced to jump between saturation points ($-14\text{V}$ to $+14\text{V}$), we are seeing the physical switching limit of the internal transistors.
+
+---
+
+## Conclusion & Optimization
+The circuit is functioning correctly as an Inverting Amplifier but is currently in an **Overdriven** state.
+
+### To Achieve a Clean Sine Wave:
+To prevent clipping and maintain high fidelity, the input amplitude ($V_1$) should be reduced to **$2\text{V}$ or less**.
+* **Revised Calculation:** With $V_{in} = 2\text{V}$, the expected output is $14\text{V}$ ($2\text{V} \times 7$).
+* **Result:** This signal fits within the $\pm 15\text{V}$ power rails, allowing the op-amp to remain in its linear operating region.
+
+# AC Analysis (Bode Plot): Inverting Amplifier
+<img width="1916" height="518" alt="image" src="https://github.com/user-attachments/assets/e6819994-cc70-48f5-bdc0-94889ff9398c" />
+
+
+The AC analysis (frequency response) for the Inverting Amplifier demonstrates the **Gain-Bandwidth Product** in action. Unlike the Voltage Follower, this circuit must balance higher gain against a reduced frequency range.
+
+## 1. Magnitude Analysis (Voltage Gain)
+The solid magnitude line represents the gain of the circuit across a frequency spectrum from $1\text{Hz}$ to $1\text{GHz}$.
+
+* **Low-Frequency Gain:** The plot shows a steady gain of approximately **$16.9\text{dB}$**.
+* **Mathematical Verification:** $$Gain\text{ (dB)} = 20 \log_{10}(A_v) = 20 \log_{10}(7) \approx 16.9\text{dB}$$
+  This confirms the resistor ratio ($7\text{k}\Omega / 1\text{k}\Omega$) is providing the expected amplification.
+* **Passband:** The gain remains flat and stable from $1\text{Hz}$ up to roughly $100\text{kHz}$, which defines the primary operating range of this amplifier.
+
+---
+
+## 2. Phase Analysis (Signal Inversion)
+The dotted phase line illustrates the time relationship between the input and output.
+
+* **$180^\circ$ Shift:** At low and mid-range frequencies, the phase is held at $180^\circ$. This is the signature of an **Inverting Amplifier**, where the output is the exact opposite of the input.
+* **Phase Roll-off:** Beyond $100\text{kHz}$, the phase begins to drop. This indicates that internal op-amp capacitances are introducing additional propagation delays (lag).
+
+---
+
+## 3. The $3\text{dB}$ Cutoff & Bandwidth
+The **$3\text{dB}$ Cutoff Frequency** ($f_c$) is found where the gain drops from its maximum ($16.9\text{dB}$) to $13.9\text{dB}$.
+
+### The Gain-Bandwidth Product (GBW)
+In operational amplifiers, the product of Gain and Bandwidth is a constant:
+$$\text{Gain} \times \text{Bandwidth} = \text{Constant}$$
+
+* **Observation:** Because we increased the gain from $1$ (in the follower) to $7$, the usable bandwidth has proportionally decreased. 
+* **Result:** The magnitude curve "rolls off" much earlier in this configuration than it does in a unity-gain buffer.
+
+---
+
+## Conclusion
+* **Performance:** The design successfully achieves a stable gain of **$7$ ($16.9\text{dB}$)** for audio and low-frequency applications.
+* **High-Frequency Limit:** At $1\text{MHz}$, the gain drops toward $0\text{dB}$ (unity), meaning the circuit can no longer effectively amplify signals at that speed.
+* **Fidelity:** Within the operating bandwidth, the signal remains perfectly inverted ($180^\circ$ phase shift) with high linear accuracy.
+
+
+# 3dB Cutoff Frequency Calculation
+
+The **3dB Cutoff Frequency ($f_c$)** is the point where the amplifier's output power drops by half, marking the upper limit of its effective operating bandwidth.
+
+## 1. Calculation Methodology
+To identify the cutoff frequency from the Bode plot, we follow these steps:
+
+* **Maximum Gain:** The mid-band gain is **$16.9\text{dB}$** (representing $A_v = 7$).
+* **Target Point:** We identify the frequency where the gain drops by $3\text{dB}$:
+  $$16.9\text{dB} - 3\text{dB} = \mathbf{13.9\text{dB}}$$
+* **Locating $f_c$:** In the simulation environment, move the cursor along the magnitude curve until the value reads **$13.9\text{dB}$**. The corresponding value on the x-axis is the cutoff frequency.
+
+---
+
+## 2. Theoretical Estimation
+Based on the standard **Gain-Bandwidth Product (GBW)** of a $\mu A741$ (typically $1\text{MHz}$), we can estimate the closed-loop bandwidth for this specific configuration:
+
+$$f_c \approx \frac{\text{GBW}}{\text{Closed Loop Gain}}$$
+
+Substituting our values:
+$$f_c \approx \frac{1,000,000\text{Hz}}{7} \approx \mathbf{142.8\text{kHz}}$$
+
+---
+
+## 3. Practical Implications
+The $143\text{kHz}$ limit defines how the circuit handles different signal ranges:
+
+| Frequency Range | Circuit Behavior |
+| :--- | :--- |
+| **Below $143\text{kHz}$** | The amplifier operates linearly with a stable gain of $7$. |
+| **At $143\text{kHz}$** | The output power drops to 50%, and voltage gain is $\approx 70.7\%$ of maximum. |
+| **Above $143\text{kHz}$** | The op-amp enters the "roll-off" region, where gain decreases at a constant rate of **$-20\text{dB}$ per decade**. |
+
+## Conclusion
+The analysis confirms that while the Inverting Amplifier provides significant gain, it is bandwidth-limited compared to the Unity Gain Buffer. For high-fidelity audio (up to $20\text{kHz}$), this circuit is more than sufficient, but for radio frequency or high-speed data applications, a wider bandwidth op-amp would be necessary.
+
+# Inverting Amplifier: Final Circuit Summary
+
+This document summarizes the design, parameters, and simulation findings for the $\mu A741$ Inverting Amplifier circuit.
+
+## 1. Circuit Configuration
+The Inverting Amplifier is a closed-loop system where the input signal is applied to the inverting ($-$) terminal through an input resistor ($R_{in}$), while the non-inverting ($+$) terminal is tied to ground. This configuration creates a **Virtual Ground** at the inverting input, allowing the gain to be set by the external resistor ratio.
+
+---
+
+## 2. Key Parameters
+| Parameter | Value | Description |
+| :--- | :--- | :--- |
+| **Input Resistor ($R_{in}$)** | $1\text{k}\Omega$ | Sets the input impedance. |
+| **Feedback Resistor ($R_f$)** | $7\text{k}\Omega$ | Determines the amplification level. |
+| **Voltage Gain ($A_v$)** | **$-7$** | Calculated as $-R_f / R_{in}$. |
+| **Power Supply** | $\pm 15\text{V}$ | DC rails ($V_{cc}$ and $V_{ee}$). |
+| **Input Signal** | $5\text{V}$ Peak | $1\text{kHz}$ Sine wave. |
+
+---
+
+## 3. Analysis Findings
+
+| Analysis Type | Observation | Conclusion |
+| :--- | :--- | :--- |
+| **DC (.op)** | $V(n001) \approx 19\mu\text{V}$ | Confirms **Virtual Ground** is active. |
+| **Transient (.tran)** | Output is "flipped" and flat-topped | Confirms **Phase Inversion** and **Output Saturation**. |
+| **AC (.ac)** | Gain is $16.9\text{dB}$ up to $\approx 143\text{kHz}$ | Defines the **Bandwidth** and the **3dB Cutoff**. |
+
+---
+
+## 4. Final Conclusion
+The simulation successfully demonstrates the fundamental principles of operational amplifier theory:
+
+* **Phase Inversion:** The output signal is $180^\circ$ out of phase with the input, as proven by both the transient and AC phase plots.
+* **Controlled Gain:** The gain is determined strictly by the external resistors ($R_f$ and $R_{in}$), demonstrating the power of negative feedback.
+* **Physical Constraints:** The op-amp is strictly limited by its power rails. In this simulation, the $5\text{V}$ input was too high for a gain of $7$, as the required $35\text{V}$ output exceeded the available $15\text{V}$ supply, leading to clipping.
+* **Frequency Response:** As frequency increases, internal parasitics cause the gain to drop. For the $\mu A741$, this roll-off significantly impacts performance beyond **$143\text{kHz}$**.
+
+> [!TIP]
+> **Design Recommendation:** To utilize this circuit as a linear amplifier with the current resistor values, the input signal amplitude should be kept **below $2\text{V}$** to avoid output distortion and saturation.
